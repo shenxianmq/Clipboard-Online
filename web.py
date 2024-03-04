@@ -18,7 +18,10 @@ if not os.path.exists("./download"):
 
 def read_clipboard():
     if not os.path.exists("clipboard.yaml"):
-        yaml_dump([])
+        with open("clipboard.yaml", "w", encoding="utf-8") as file:
+            yaml.dump(
+                [], file, default_flow_style=False, sort_keys=False, allow_unicode=True
+            )
     with open("clipboard.yaml", "r", encoding="utf-8") as file:
         clipboard_list = yaml.safe_load(file)
     if clipboard_list:
