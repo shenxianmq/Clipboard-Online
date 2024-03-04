@@ -15,14 +15,19 @@ os.chdir(working_directory)
 if not os.path.exists("./download"):
     os.mkdir("./download")
 
+if not os.path.exists("./config"):
+    os.mkdir("./config")
+
+clipboard_path = os.path.join("./config", "clipboard.yaml")
+
 
 def read_clipboard():
-    if not os.path.exists("clipboard.yaml"):
-        with open("clipboard.yaml", "w", encoding="utf-8") as file:
+    if not os.path.exists(clipboard_path):
+        with open(clipboard_path, "w", encoding="utf-8") as file:
             yaml.dump(
                 [], file, default_flow_style=False, sort_keys=False, allow_unicode=True
             )
-    with open("clipboard.yaml", "r", encoding="utf-8") as file:
+    with open(clipboard_path, "r", encoding="utf-8") as file:
         clipboard_list = yaml.safe_load(file)
     if clipboard_list:
         return clipboard_list
@@ -39,7 +44,7 @@ def yaml_dump(data):
                 os.remove(file_path)
         clipboard_list.remove(item)
 
-    with open("clipboard.yaml", "w", encoding="utf-8") as file:
+    with open(clipboard_path, "w", encoding="utf-8") as file:
         yaml.dump(
             data, file, default_flow_style=False, sort_keys=False, allow_unicode=True
         )
