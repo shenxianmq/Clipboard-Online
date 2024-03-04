@@ -46,8 +46,11 @@ div {
 }
 
 .content{
-    padding-left: 0.5rem;
+ padding: 0.5rem;
  border: 1px solid #eee;
+ width: 40rem;
+ word-wrap: break-word;
+
 }
 .content span{
 font-size: 20px;
@@ -91,7 +94,7 @@ font-size: 20px;
                     var targetId = buttonId.replace('btn-', '');
 
                     // 获取对应的节点
-                    var targetNode = $('#' + targetId);
+                    var targetNode = $('#' + targetId + " span");
 
                     // 创建一个临时文本区域
                     var tempTextarea = $('<textarea>');
