@@ -20,6 +20,12 @@ COPY . /app
 # 设置工作目录
 WORKDIR /app
 
+# 复制 requirements.txt 到工作目录
+COPY requirements.txt /app/
+
+# 安装依赖并删除 requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt && rm requirements.txt
+
 
 RUN chmod 777 -R /app
 
