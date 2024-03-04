@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clipboard Content</title>
+    <!-- 引入 Bootstrap 的 CSS 文件 -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/color.css">
+    <link rel="stylesheet" href="/static/css/iconfont.css">
+    <script src="/static/js/vue@2.js"></script>
+    <script src="/static/js/jquery-3.3.1.min.js"></script>
+    <script src="/static/js/poper.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/axios.js"></script>
+</head>
+
+<body>
+    <style>
+        /* 全局样式 */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        div {
+            display: block;
+        }
+
+        #main-content {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            justify-content: center;
+            vertical-align:middle;
+            flex-wrap: wrap;
+            padding-top: 3rem;
+            padding-left: 20rem;
+            padding-right: 20rem;
+        }
+        .flex-center{
+            display: flex;
+            justify-content: center;
+        }
+        .btn-nav{
+            margin-right: 1rem;
+        }
+    </style>
+    <main id="main-content" style="padding-bottom: 2rem;">
+        <div>
+        <div>
+            <h1><span>Clipboard Online</span></h1>
+        </div>
+        <div class="flex-center">
+            <a type="button" href="/clipboard" class="btn btn-primary btn-nav"><span>剪贴板</span></a>
+            <a type="button" href="/add" class="btn btn-primary btn-nav"><span>添加</span></a>
+        </div>
+        </div>
+    </main>
+</body>
+
+</html>

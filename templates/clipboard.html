@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clipboard Content</title>
+    <!-- 引入 Bootstrap 的 CSS 文件 -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/color.css">
+    <link rel="stylesheet" href="/static/css/iconfont.css">
+    <script src="/static/js/vue@2.js"></script>
+    <script src="/static/js/jquery-3.3.1.min.js"></script>
+    <script src="/static/js/poper.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/axios.js"></script>
+</head>
+
+<body>
+    <style>
+        /* 全局样式 */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+div {
+    display: block;
+}
+#main-content{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding-top:3rem;
+    padding-left: 20rem;
+    padding-right: 20rem;
+}
+.c-grid {
+    display: grid;
+    width: 100%;
+    grid-template-columns: 5fr 1fr;
+    /* 假设我们想要我们的行都是一个固定的高度 - 如果我们想要高度响应地根据内容变化，可以保留为默认的 `auto` */
+    gap: 20px;
+    padding-left: 1rem;
+    margin-bottom: 1rem;
+   
+}
+
+.content{
+    padding-left: 0.5rem;
+ border: 1px solid #eee;
+}
+.content span{
+font-size: 20px;
+}
+
+    </style>
+    <main id="main-content" style="padding-bottom: 2rem;">
+    <div>
+        <h1><span>Clipboard Online</span></h1>
+    </div>
+    {% for item in clipboard_list %}
+    {% if item.type == "file" %}
+    <div class="form-inline c-grid">
+        <div id="{{item.uuid}}" class="content">
+            <span>{{ item.filename }}</span>
+        </div>
+        <div class="left-border">
+            <a id="btn-{{item.uuid}}" href="/download/{{item.filename}}" type="button" class="btn btn-primary btn-download1" style="width: 5rem;">下载</a>
+        </div>
+    </div>
+    {% elif item.type == "string" %}
+    <div class="form-inline c-grid">
+        <div id="{{item.uuid}}" class="content">
+            <span>{{ item.content }}</span>
+        </div>
+        <div  class="left-border">
+        <button id="btn-{{item.uuid}}" type="button" class="btn btn-primary btn-copy" style="width: 5rem;">复制</button>
+        </div>
+    </div>
+    {% endif %}
+    {% endfor %}
+    </main>
+    <script>
+        $(document).ready(function () {
+                // 监听 .btn-copy 元素的点击事件
+                $('.btn-copy').on('click', function () {
+                    // 获取当前按钮的 id
+                    var buttonId = $(this).attr('id');
+
+                    // 替换掉 id 中的 'btn-'，得到新的 id
+                    var targetId = buttonId.replace('btn-', '');
+
+                    // 获取对应的节点
+                    var targetNode = $('#' + targetId);
+
+                    // 创建一个临时文本区域
+                    var tempTextarea = $('<textarea>');
+                    tempTextarea.val(targetNode.text());
+
+                    // 将临时文本区域添加到页面中
+                    $('body').append(tempTextarea);
+
+                    // 选择文本
+                    tempTextarea.select();
+                    tempTextarea[0].setSelectionRange(0, 99999); // 兼容移动端
+
+                    // 复制文本到剪贴板
+                    document.execCommand('copy');
+
+                    // 移除临时文本区域
+                    tempTextarea.remove();
+
+                    // 弹出复制成功的提示
+                    $(this).text("已复制");
+                        // 恢复按钮文本为原始文本
+                    setTimeout(() => {
+                        $(this).text("复制");
+                    }, 2000);
+                });
+
+                $('.btn-download').on('click', function () {
+                var buttonId = $(this).attr('id');
+                var targetId = buttonId.replace('btn-', '');
+                var targetNode = $('#' + targetId + " span");
+                var buttonText = $(this).text(); // 保存按钮原始文本
+                console.log(targetNode.text())
+                // 发送新ID节点的文本给后台并开始下载文件
+                 fetch("/download", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ filename: targetNode.text() }),
+                    }).then(response => response.blob())
+                     .then(blob => {
+                         const url = URL.createObjectURL(blob);
+
+                         const link = document.createElement('a');
+                         link.href = url;
+                         link.setAttribute('download', 'example.txt'); // 设置文件名
+                         document.body.appendChild(link);
+
+                         link.click();
+
+                         document.body.removeChild(link);
+                     })
+                     .catch(error => {
+                         console.error('文件下载失败：', error);
+                     });
+
+                // 恢复按钮文本为原始文本
+                setTimeout(() => {
+                    $(this).text(buttonText);
+                }, 2000);
+            });
+                
+            });
+        
+    </script>
+</body>
+</html>
