@@ -134,4 +134,4 @@ async def paste(request: Request):
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run("web:app", host="0.0.0.0", port=8095, reload=True)
+    uvicorn.run("web:app", host="0.0.0.0", port=18095, reload=False)
