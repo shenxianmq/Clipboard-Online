@@ -53,8 +53,9 @@
                     }).then(response => response.json())
                         .then(data => {
                             console.log(data.message)
-                            window.location.reload();
-                        })
+                            setTimeout(() => {
+                                window.location.reload()
+                            }, 500);})
                 });
             });
       function showTips(message) {
