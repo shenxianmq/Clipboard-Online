@@ -1,6 +1,6 @@
 
     <div class="flex-center">
-        <span class="title">Clipboard Content</span>
+        <span class="title">Clipboard Online</span>
     </div>
     {% for item in clipboard_list %}
     {% if item.type == "file" %}
@@ -10,6 +10,8 @@
         </div>
         <div class="left-border">
             <a id="btn-{{item.uuid}}" href="/download/{{item.filename}}" type="button" class="btn btn-primary btn-download" style="width: 5rem;">下载</a>
+            <div class="space"></div>
+            <button id="btn-{{item.uuid}}" type="button" class="btn btn-danger btn-delete" style="width: 5rem;">删除</button>
         </div>
     </div>
     {% elif item.type == "string" %}
@@ -19,6 +21,8 @@
         </div>
         <div  class="left-border">
         <button id="btn-{{item.uuid}}" type="button" class="btn btn-primary btn-copy" style="width: 5rem;">复制</button>
+        <div class="space"></div>
+        <button id="btn-{{item.uuid}}" type="button" class="btn btn-danger btn-delete" style="width: 5rem;">删除</button>
         </div>
     </div>
     {% endif %}
@@ -60,7 +64,25 @@
                         $(this).text("复制");
                     }, 2000);
                 });
-                
+                $('.btn-delete').on('click', function () {
+                // 获取当前按钮的 id
+                var buttonId = $(this).attr('id');
+                // 替换掉 id 中的 'btn-'，得到新的 id
+                var targetId = buttonId.replace('btn-', '');
+                     fetch("/delete", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ "uuid":targetId }),
+                    }).then(response => response.json())
+                        .then(data => {
+                            console.log(data.message)
+                            setTimeout(() => {
+                                window.location.reload()}, 500);
+                           
+                        })
+            });
             });
         
     </script>

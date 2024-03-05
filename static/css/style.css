@@ -12,7 +12,7 @@
             flex: 10 !important;
           }
        .clipboard-content {
-         width: 60vw !important;
+         width: 45vw !important;
        }
   
        #clipboard-text {
@@ -53,6 +53,7 @@
       /* 假设我们想要我们的行都是一个固定的高度 - 如果我们想要高度响应地根据内容变化，可以保留为默认的 `auto` */
       gap: 20px;
       padding-left: 1rem;
+      padding-right: 1rem;
       margin-bottom: 1rem;
 
   }

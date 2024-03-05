@@ -23,13 +23,13 @@
             <a class="nav-link active" href="/">主页</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="/clipboard">剪贴板</a>
-        </li>
-        <li class="nav-item">
             <a class="nav-link" href="/add_content">添加文本</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="/upload_file">上传文件</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="" id="clear-clipboard">清空剪贴板</a>
         </li>
     </ul>
     <div class="m-container">
@@ -40,6 +40,23 @@
         <div class="side-area"></div>
     </div>
 <script>
+           $(document).ready(function () {
+                // 监听 .btn-copy 元素的点击事件
+                $('#clear-clipboard').on('click', function () {
+                    console.log("success")
+                        fetch("/clear_clipboard", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ command: "clear" }),
+                    }).then(response => response.json())
+                        .then(data => {
+                            console.log(data.message)
+                            window.location.reload();
+                        })
+                });
+            });
       function showTips(message) {
             // 创建提示框
             // 如果保存成功，移除提示框

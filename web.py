@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Request, HTTPException, UploadFile, File
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
@@ -51,6 +51,16 @@ def yaml_dump(data):
         )
 
 
+def append_item(item):
+    clipboard_list.append(item)
+    yaml_dump(clipboard_list)
+
+
+def remove_item(item):
+    clipboard_list.remove(item)
+    yaml_dump(clipboard_list)
+
+
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -73,10 +83,8 @@ class DownloadRequest(BaseModel):
 
 @app.post("/download")
 def download_file(request: DownloadRequest):
-    print(request.filename)
     filename = request.filename
     file = os.path.abspath(os.path.join("./download", filename))
-    print(file)
     try:
         # 返回文件给客户端进行下载
         return FileResponse(file, filename=filename)
@@ -101,24 +109,18 @@ async def upload_file(item: FileItem):
     file = base64.b64decode(content)
     with open(f"./download/{filename}", "wb") as f:
         f.write(file)
-    clipboard_list.append(
-        {"type": "file", "filename": filename, "uuid": str(uuid.uuid4())}
-    )
-    yaml_dump(clipboard_list)
+    append_item({"type": "file", "filename": filename, "uuid": str(uuid.uuid4())})
     return {"message": "Content added successfully"}
 
 
 @app.post("/content")
 async def add_content(item: ContentItem):
     content = item.content
-    clipboard_list.append(
-        {"type": "string", "content": content, "uuid": str(uuid.uuid4())}
-    )
-    yaml_dump(clipboard_list)
+    append_item({"type": "string", "content": content, "uuid": str(uuid.uuid4())})
     return {"message": "Content added successfully"}
 
 
-@app.get("/clipboard")
+@app.get("/")
 async def get_clipboard(request: Request):
     reversed_list = clipboard_list[::-1]
     context = {
@@ -126,16 +128,6 @@ async def get_clipboard(request: Request):
         "clipboard_list": reversed_list,
         "title": "Clipboard Content",
         "template_file": "clipboard.html",
-    }
-    return templates.TemplateResponse("index.html", context)
-
-
-@app.get("/")
-async def main_page(request: Request):
-    context = {
-        "request": request,
-        "title": "Clipboard Online",
-        "template_file": "homepage.html",
     }
     return templates.TemplateResponse("index.html", context)
 
@@ -165,16 +157,42 @@ async def upload_file(file: UploadFile = File(...)):
     file_path = os.path.join("./download", file.filename)
     with open(file_path, "wb") as f:
         shutil.copyfileobj(file.file, f)
-    clipboard_list.append(
-        {"type": "file", "filename": file.filename, "uuid": str(uuid.uuid4())}
-    )
+    append_item({"type": "file", "filename": file.filename, "uuid": str(uuid.uuid4())})
     return {"filename": file.filename}
+
+
+@app.post("/delete")
+async def delete(request: Request):
+    data = await request.json()
+    uuid = data["uuid"]
+    temp_list = clipboard_list[:]
+    for item in temp_list:
+        if uuid == item["uuid"]:
+            if item["type"] == "file":
+                file_path = os.path.join("./download", item["filename"])
+                if os.path.exists(file_path):
+                    os.remove(file_path)
+            remove_item(item)
+            break
+    return {"message": "success"}
 
 
 @app.get("/paste")
 async def paste(request: Request):
     content = clipboard_list[-1]["content"]
     return JSONResponse({"content": content})
+
+
+@app.post("/clear_clipboard")
+async def clear_clipboard(request: Request):
+    global clipboard_list
+    clipboard_list = []
+    download_path = os.path.abspath("./download")
+    if os.path.exists(download_path):
+        shutil.rmtree(download_path)
+        os.mkdir(download_path)
+    yaml_dump(clipboard_list)
+    return {"message": "success"}
 
 
 if __name__ == "__main__":
