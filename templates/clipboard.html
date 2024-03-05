@@ -60,42 +60,6 @@
                         $(this).text("复制");
                     }, 2000);
                 });
-
-                $('.btn-download').on('click', function () {
-                var buttonId = $(this).attr('id');
-                var targetId = buttonId.replace('btn-', '');
-                var targetNode = $('#' + targetId + " span");
-                var buttonText = $(this).text(); // 保存按钮原始文本
-                console.log(targetNode.text())
-                // 发送新ID节点的文本给后台并开始下载文件
-                 fetch("/download", {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ filename: targetNode.text() }),
-                    }).then(response => response.blob())
-                     .then(blob => {
-                         const url = URL.createObjectURL(blob);
-
-                         const link = document.createElement('a');
-                         link.href = url;
-                         link.setAttribute('download', 'example.txt'); // 设置文件名
-                         document.body.appendChild(link);
-
-                         link.click();
-
-                         document.body.removeChild(link);
-                     })
-                     .catch(error => {
-                         console.error('文件下载失败：', error);
-                     });
-
-                // 恢复按钮文本为原始文本
-                setTimeout(() => {
-                    $(this).text(buttonText);
-                }, 2000);
-            });
                 
             });
         

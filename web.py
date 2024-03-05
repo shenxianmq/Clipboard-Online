@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request, HTTPException
+from fastapi import FastAPI, Request, HTTPException, UploadFile, File
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
@@ -7,6 +7,7 @@ import os
 import base64
 import uuid
 import yaml
+import shutil
 
 
 working_directory = os.path.dirname(os.path.abspath(__file__))
@@ -139,14 +140,35 @@ async def main_page(request: Request):
     return templates.TemplateResponse("index.html", context)
 
 
-@app.get("/add")
+@app.get("/add_content")
 async def main_page(request: Request):
     context = {
         "request": request,
         "title": "Add Content",
-        "template_file": "add.html",
+        "template_file": "add_content.html",
     }
     return templates.TemplateResponse("index.html", context)
+
+
+@app.get("/upload_file")
+async def upload_file(request: Request):
+    context = {
+        "request": request,
+        "title": "Upload File",
+        "template_file": "upload_file.html",
+    }
+    return templates.TemplateResponse("index.html", context)
+
+
+@app.post("/upload_file")
+async def upload_file(file: UploadFile = File(...)):
+    file_path = os.path.join("./download", file.filename)
+    with open(file_path, "wb") as f:
+        shutil.copyfileobj(file.file, f)
+    clipboard_list.append(
+        {"type": "file", "filename": file.filename, "uuid": str(uuid.uuid4())}
+    )
+    return {"filename": file.filename}
 
 
 @app.get("/paste")

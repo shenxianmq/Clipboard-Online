@@ -7,15 +7,40 @@
   div {
       display: block;
   }
+     @media (max-width: 767.98px) {
+        #main-content {
+            flex: 10 !important;
+          }
+       .clipboard-content {
+         width: 60vw !important;
+       }
+  
+       #clipboard-text {
+         width: 80vw;
+       }
+  
+       .form-group {
+         width: 80vw;
+       }
+     }
+  
+     .m-container {
+       display: flex;
+     }
+  
+     .side-area {
+       flex: 1;
+     }
 
   #main-content {
       display: flex;
+      flex: 1;
       flex-direction: column;
       justify-content: center;
       flex-wrap: wrap;
       width: 100%;
       height: 100%;
-      padding-top: 3rem;
+      padding-top: 1rem;
   }
 
   .title{
@@ -60,4 +85,27 @@
     height: 30vh;
     margin-top: 1rem;
     margin-bottom: 1rem;
+  }
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    /* border: 1px solid #eee; */
+  }
+
+  .flex-end {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .border {
+    display: flex;
+    align-items: center;
+    border: 1px solid #eee;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .btn-submit {
+    width: 5rem;
   }
