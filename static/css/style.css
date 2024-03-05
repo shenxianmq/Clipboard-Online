@@ -1,159 +1,63 @@
-/* static/style.css */
+  /* 全局样式 */
+  body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+  }
 
-/* 全局样式 */
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-}
-         @media (max-width: 767.98px) {
-            .hide-content{
-                flex:0 !important;
-            }
-         }
-div {
-    display: block;
-}
-.m-container{
-    display: flex;
-}
-.flex-1{
-    flex:1;
-}
-#main-content{
-    flex:4;
-}
-.main-grid{
-        display: grid;
-        width: 100%;
-        grid-template-columns: 1fr 10fr 1fr;
-        /* grid-template-columns: auto auto; */
-        /* grid-auto-rows: 200px; */
-        /* 假设我们想要我们的行都是一个固定的高度 - 如果我们想要高度响应地根据内容变化，可以保留为默认的 `auto` */
-        gap: 20px;
-}
-#sidebar #logo {
-    margin-bottom: 20px;
-}
+  div {
+      display: block;
+  }
 
-span {
-    white-space: nowrap;
-}
-a{
-    white-space: nowrap;
-}
+  #main-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      flex-wrap: wrap;
+      width: 100%;
+      height: 100%;
+      padding-top: 3rem;
+  }
 
-h1.title{
-    margin: 4rem;
+  .title{
     font-size: 2rem;
-    line-height: 1.75rem;
-    margin-left: 3rem;
-    color: inherit;
-    display: flex;
-    align-items: center;
-}
+  }
+  .c-grid {
+      display: grid;
+      width: 100%;
+      grid-template-columns: 5fr 1fr;
+      /* 假设我们想要我们的行都是一个固定的高度 - 如果我们想要高度响应地根据内容变化，可以保留为默认的 `auto` */
+      gap: 20px;
+      padding-left: 1rem;
+      margin-bottom: 1rem;
 
-h2.title{
-    margin: 0;
-    font-size: 1.25rem;
-    line-height: 1.75rem;
-    margin-top: 2rem;
-    margin-left: 2rem;
-    color: inherit;
-    display: flex;
-    align-items: center;
-}
+  }
 
-.flex-center {
+  .clipboard-content {
+      padding: 0.5rem;
+      border: 1px solid #eee;
+      width: 40rem;
+      word-wrap: break-word;
+
+  }
+
+  .clipboard-content span {
+      font-size: 20px;
+  }
+  .flex-center{
+    display: flex;
+    justify-content: center;
+  }
+  .space{
+    margin: 0 0.5rem 0 0.5rem;
+  }
+  .left-border{
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-/* 去除点击按钮后出现的边框 */
-.btn:focus,.btn:active {
-    outline: 0 ;
-    box-shadow: none !important;
- }
-
-.cursor-pointer{
-    cursor: pointer;
-}
- /* 常用工具样式 */
-/* 图标居中对齐 */
-
-.icon-tools.btn{
-    font-size: 15px;
-    pointer-events: none;
-    width: auto;
-    height: auto;
-}
-
-.iconfont.icon-tools{
-    font-size: 20px;
-}
-.card-row{
-    height: 100px;
-}
-
- /* 居中对齐 */
-
- .align-items-center {
-    align-items: center!important;
-}
-
-/* 全局样式结束 */
-.config-name{
-    cursor: default;
-}
-
-.tool-tip {
-    color: #fff;
-    position: relative;
-    /* 将元素定位为相对定位 */
-    /* left: -0.2rem; */
-    /* 向上移动 1rem */     /* 字体颜色为黑色 */
-    background-color: rgba(79, 97, 116, 0.8);
-    /* 背景颜色为带透明度的灰色 */     /* 背景颜色为白色 */
-     border-radius: 50%;
-     /* 圆形形状 */
-     display: inline-block;
-     /* 设置为行内块元素以保持圆形形状 */
-     width: 1rem;
-     /* 设置宽度 */
-     height: 1rem;
-     /* 设置高度 */
-     text-align: center;
-     /* 文本居中 */
-     line-height: 1rem;
-     font-size: 0.8rem;
-     /* 行高与高度相等以垂直居中 */
-     cursor: pointer;
-     /* 光标为指针形状以指示可点击 */
- }
-
-/* 自定义 Tooltip 样式 */
-.custom-tooltip {
-    background-color: #007bff;
-    /* 设置背景色 */
-    color: #fff;
-    /* 设置字体颜色 */
-}
-
-/* 自定义 Tooltip 边框颜色 */
-.custom-tooltip .arrow::before {
-    border-bottom-color: #007bff !important;
-    /* 设置边框颜色 */
-}
-.tooltip-inner{
-    background-color: #dfdfe0 !important;
-    color: #000 !important;
-}
-.tooltip-inner {
-    text-align: left !important;
-}
-
-.bg-orange {
-    --tblr-bg-opacity: 1;
-    background-color: rgba(var(--tblr-orange-rgb), var(--tblr-bg-opacity)) !important;
-    border: rgba(var(--tblr-orange-rgb));
-}
+  }
+  #clipboard-text{
+    width: 50vw;
+    height: 30vh;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }

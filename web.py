@@ -120,19 +120,33 @@ async def add_content(item: ContentItem):
 @app.get("/clipboard")
 async def get_clipboard(request: Request):
     reversed_list = clipboard_list[::-1]
-    return templates.TemplateResponse(
-        "clipboard.html", {"request": request, "clipboard_list": reversed_list}
-    )
+    context = {
+        "request": request,
+        "clipboard_list": reversed_list,
+        "title": "Clipboard Content",
+        "template_file": "clipboard.html",
+    }
+    return templates.TemplateResponse("index.html", context)
 
 
 @app.get("/")
 async def main_page(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+    context = {
+        "request": request,
+        "title": "Clipboard Online",
+        "template_file": "homepage.html",
+    }
+    return templates.TemplateResponse("index.html", context)
 
 
 @app.get("/add")
 async def main_page(request: Request):
-    return templates.TemplateResponse("add.html", {"request": request})
+    context = {
+        "request": request,
+        "title": "Add Content",
+        "template_file": "add.html",
+    }
+    return templates.TemplateResponse("index.html", context)
 
 
 @app.get("/paste")
@@ -144,4 +158,4 @@ async def paste(request: Request):
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run("web:app", host="0.0.0.0", port=18095, reload=False)
+    uvicorn.run("web:app", host="0.0.0.0", port=18095, reload=True)
