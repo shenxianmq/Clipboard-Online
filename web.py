@@ -19,7 +19,7 @@ if not os.path.exists("./download"):
 if not os.path.exists("./config"):
     os.mkdir("./config")
 
-clipboard_path = os.path.join("./config", "clipboard.yaml")
+clipboard_path = os.path.abspath(os.path.join("./config", "clipboard.yaml"))
 
 
 def read_clipboard():
