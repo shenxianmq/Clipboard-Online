@@ -198,8 +198,11 @@ async def clear_clipboard(request: Request):
     global clipboard_list
     clipboard_list = []
     download_path = os.path.abspath("./download")
-    if os.path.exists(download_path):
-        empty_directory(download_path)
+    try:
+        if os.path.exists(download_path):
+            empty_directory(download_path)
+    except:
+        pass
     yaml_dump(clipboard_list)
     return {"message": "success"}
 
