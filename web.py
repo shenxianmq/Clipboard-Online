@@ -61,6 +61,16 @@ def remove_item(item):
     yaml_dump(clipboard_list)
 
 
+def empty_directory(directory_path):
+    for root, dirs, files in os.walk(directory_path):
+        for file in files:
+            file_path = os.path.join(root, file)
+            os.remove(file_path)
+        for dir in dirs:
+            dir_path = os.path.join(root, dir)
+            shutil.rmtree(dir_path)
+
+
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -189,8 +199,7 @@ async def clear_clipboard(request: Request):
     clipboard_list = []
     download_path = os.path.abspath("./download")
     if os.path.exists(download_path):
-        shutil.rmtree(download_path)
-        os.mkdir(download_path)
+        empty_directory(download_path)
     yaml_dump(clipboard_list)
     return {"message": "success"}
 
