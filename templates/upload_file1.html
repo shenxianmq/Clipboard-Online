@@ -1,0 +1,49 @@
+<style>
+
+</style>
+<div class="form-group">
+    <div class="">
+        <div class="flex-center">
+            <span class="title">文件上传</span>
+        </div>
+        <form id="uploadForm">
+            <div class="border">
+                <input type="file" class="form-control-file" id="upload_file">
+                <button type="submit" class="btn btn-primary btn-submit">上传</button>
+            </div>
+            <div class="flex-end">
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    // 获取表单元素和提交按钮
+    const form = document.getElementById('uploadForm');
+    const submitButton = document.querySelector('.btn-submit');
+
+    // 添加提交事件处理程序
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault(); // 阻止表单默认提交行为
+
+        // 获取选中的文件
+        const fileInput = document.getElementById('upload_file');
+        const file = fileInput.files[0];
+
+        // 创建FormData对象，用于发送文件数据
+        const formData = new FormData();
+        formData.append('file', file);
+
+        // 发送文件到后端
+        try {
+            const response = await fetch('/upload_file', {
+                method: 'POST',
+                body: formData
+            });
+            const result = await response.json();
+            console.log(result); // 处理后端返回的结果
+            showTips("上传成功");
+        } catch (error) {
+            console.error(error);
+        }
+    });
+</script>

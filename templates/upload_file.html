@@ -1,17 +1,27 @@
 <style>
+    .progress-container {
+        display: flex; /* 使用 Flexbox 布局 */
+        align-items: center; /* 垂直居中对齐 */
+        width: 100%; /* 设置宽度为 100% */
+    }
 
+    #progressBar {
+        width: 20%; /* 设置宽度为 100% */
+    }
 </style>
 <div class="form-group">
     <div class="">
         <div class="flex-center">
             <span class="title">文件上传</span>
-        </div>        
+        </div>
         <form id="uploadForm">
             <div class="border">
                 <input type="file" class="form-control-file" id="upload_file">
                 <button type="submit" class="btn btn-primary btn-submit">上传</button>
             </div>
-            <div class="flex-end">
+            <div class="flex-start">
+                <progress id="progressBar" value="0" max="100"></progress>
+                <span id="status"></span>
             </div>
         </form>
     </div>
@@ -20,6 +30,8 @@
     // 获取表单元素和提交按钮
     const form = document.getElementById('uploadForm');
     const submitButton = document.querySelector('.btn-submit');
+    const progressBar = document.getElementById('progressBar');
+    const status = document.getElementById('status');
 
     // 添加提交事件处理程序
     form.addEventListener('submit', async (e) => {
@@ -34,16 +46,31 @@
         formData.append('file', file);
 
         // 发送文件到后端
-        try {
-            const response = await fetch('/upload_file', {
-                method: 'POST',
-                body: formData
-            });
-            const result = await response.json();
-            console.log(result); // 处理后端返回的结果
-            showTips("上传成功");
-        } catch (error) {
-            console.error(error);
-        }
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/upload_file', true);
+
+        // 上传进度追踪
+        xhr.upload.onprogress = function (event) {
+            if (event.lengthComputable) {
+                const percentComplete = ((event.loaded / event.total) * 100).toFixed(1);
+                progressBar.value = percentComplete;
+                status.innerText = percentComplete + '% 上传中';
+            }
+        };
+
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                console.log(xhr.responseText); // 处理后端返回的结果
+                showTips("上传成功");
+            } else {
+                console.error('上传失败：' + xhr.statusText);
+            }
+        };
+
+        xhr.onerror = function () {
+            console.error('上传出错：' + xhr.statusText);
+        };
+
+        xhr.send(formData);
     });
 </script>
