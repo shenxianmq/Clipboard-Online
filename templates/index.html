@@ -19,8 +19,8 @@
 
 <body>
     <style>
-        #clear-clipboard{
-            color: #007bff;
+        .clear-group{
+            color: #007bff !important;
             cursor: pointer;
         }
     </style>
@@ -35,7 +35,13 @@
             <a class="nav-link" href="/upload_file">上传文件</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="clear-clipboard">清空剪贴板</a>
+            <a class="nav-link clear-group" id="clear-text">清空文本</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link clear-group" id="clear-files">清空文件</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link clear-group" id="clear-clipboard">清空剪贴板</a>
         </li>
     </ul>
     <div class="m-container">
@@ -47,6 +53,40 @@
     </div>
 <script>
            $(document).ready(function () {
+                            // 监听 .btn-copy 元素的点击事件
+               $('#clear-text').on('click', function () {
+                   console.log("success")
+                   fetch("/clear_text", {
+                       method: 'POST',
+                       headers: {
+                           'Content-Type': 'application/json',
+                       },
+                       body: JSON.stringify({ command: "clear" }),
+                   }).then(response => response.json())
+                       .then(data => {
+                           console.log(data.message)
+                           setTimeout(() => {
+                               window.location.reload()
+                           }, 500);
+                       })
+               });
+                               // 监听 .btn-copy 元素的点击事件
+               $('#clear-files').on('click', function () {
+                   console.log("success")
+                   fetch("/clear_files", {
+                       method: 'POST',
+                       headers: {
+                           'Content-Type': 'application/json',
+                       },
+                       body: JSON.stringify({ command: "clear" }),
+                   }).then(response => response.json())
+                       .then(data => {
+                           console.log(data.message)
+                           setTimeout(() => {
+                               window.location.reload()
+                           }, 500);
+                       })
+               });
                 // 监听 .btn-copy 元素的点击事件
                 $('#clear-clipboard').on('click', function () {
                     console.log("success")
@@ -70,6 +110,10 @@
                 var alertDiv = document.createElement('div');
                 alertDiv.className = 'alert alert-success';
                 alertDiv.textContent = message;
+                // 设置提示框的样式，使其固定在页面底部
+          alertDiv.style.position = 'fixed';
+          alertDiv.style.bottom = '0';
+          alertDiv.style.width = '100%';
                 // 将提示框添加到页面的 body 中
                 document.body.appendChild(alertDiv);
                 window.scrollTo(0, document.body.scrollHeight);

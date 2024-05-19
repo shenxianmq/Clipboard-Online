@@ -61,6 +61,7 @@
         xhr.onload = function () {
             if (xhr.status === 200) {
                 console.log(xhr.responseText); // 处理后端返回的结果
+                status.innerText = '100% 上传成功';
                 showTips("上传成功");
             } else {
                 console.error('上传失败：' + xhr.statusText);

@@ -193,6 +193,34 @@ async def paste(request: Request):
     return JSONResponse({"content": content})
 
 
+@app.post("/clear_text")
+async def clear_clipboard(request: Request):
+    global clipboard_list
+    temp_list = clipboard_list
+    for item in temp_list:
+        if item["type"] == "string":
+            clipboard_list.remove(item)
+    yaml_dump(clipboard_list)
+    return {"message": "success"}
+
+
+@app.post("/clear_files")
+async def clear_clipboard(request: Request):
+    global clipboard_list
+    temp_list = clipboard_list
+    for item in temp_list:
+        if item["type"] == "file":
+            clipboard_list.remove(item)
+    download_path = os.path.abspath("./download")
+    try:
+        if os.path.exists(download_path):
+            empty_directory(download_path)
+    except:
+        pass
+    yaml_dump(clipboard_list)
+    return {"message": "success"}
+
+
 @app.post("/clear_clipboard")
 async def clear_clipboard(request: Request):
     global clipboard_list
@@ -210,4 +238,4 @@ async def clear_clipboard(request: Request):
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run("web:app", host="0.0.0.0", port=18095, reload=False)
+    uvicorn.run("web:app", host="0.0.0.0", port=18095, reload=True)
