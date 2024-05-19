@@ -8,6 +8,7 @@ import base64
 import uuid
 import yaml
 import shutil
+import time
 
 
 working_directory = os.path.dirname(os.path.abspath(__file__))
@@ -196,10 +197,8 @@ async def paste(request: Request):
 @app.post("/clear_text")
 async def clear_clipboard(request: Request):
     global clipboard_list
-    temp_list = clipboard_list
-    for item in temp_list:
-        if item["type"] == "string":
-            clipboard_list.remove(item)
+    new_licpboard_list = [item for item in clipboard_list if item["type"] != "string"]
+    clipboard_list = new_licpboard_list[:]
     yaml_dump(clipboard_list)
     return {"message": "success"}
 
@@ -207,10 +206,8 @@ async def clear_clipboard(request: Request):
 @app.post("/clear_files")
 async def clear_clipboard(request: Request):
     global clipboard_list
-    temp_list = clipboard_list
-    for item in temp_list:
-        if item["type"] == "file":
-            clipboard_list.remove(item)
+    new_licpboard_list = [item for item in clipboard_list if item["type"] != "file"]
+    clipboard_list = new_licpboard_list[:]
     download_path = os.path.abspath("./download")
     try:
         if os.path.exists(download_path):
